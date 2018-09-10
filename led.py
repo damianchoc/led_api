@@ -82,10 +82,20 @@ strip = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, 
 strip.begin()
 
 colors = {
-"red" : Color(255, 0, 0),
-"blue" : Color(0, 255, 0),
+"red" : Color(0, 255, 0),
+"blue" : Color(255, 0, 0),
 "green" : Color(0, 0, 255),
-"white" : "white"
+"DaronGreen" : Color(15,216,024),
+"DaronGreenLight" : Color(37,248,46),
+"MayaBlue" : Color(26,195,243),
+"MayaBlueLight" : Color(88,250,251),
+"Night Blue" : (0,0,180),
+"Lime" : Color(172,255,106),
+"Moonlight" : Color(201,199,136),
+"White theater" : Color(127, 127, 127),
+"white" : "white",
+"rainbow" : "rainbow",
+"rainbowCykle" : "rainbowCycle"
 }
 
 powerStatus = 'off'
@@ -97,6 +107,12 @@ class ChangeColor(Resource):
             colorWipe(strip, colors[color])
             settedColor = color;
             return {'OK, Setting color:' : color}
+        elif color == "rainbow":
+            rainbow(strip)
+            settedColor = color
+        elif color == "rainbowCycle":
+            rainbowCycle(strip)
+            settedColor = color
         else:
             return {'dont known color: ' : color}
 
