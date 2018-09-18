@@ -5,6 +5,7 @@ import time
 from neopixel import *
 import argparse
 import RPi.GPIO as GPIO
+import logging
 
 # LED CONFIG
 LED_COUNT      = 30      # Number of LED pixels.
@@ -16,10 +17,36 @@ LED_INVERT     = False   # True to invert the signal (when using NPN transistor 
 LED_POWER_SWITCH = 2    # relay pin for turn on/off led strip
 LED_CHANNEL    = 0       # set to '1' for GPIOs 13, 19, 41, 45 or 53
 
+# LOG CONFIG
+logger = logging.getLogger('led_api')
+logger.setLevel(logging.DEBUG)
+# create file handler which logs even debug messages
+fh = logging.FileHandler('led_api.log')
+fh.setLevel(logging.DEBUG)
+# create console handler with a higher log level
+ch = logging.StreamHandler()
+ch.setLevel(logging.ERROR)
+# create formatter and add it to the handlers
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+fh.setFormatter(formatter)
+ch.setFormatter(formatter)
+# add the handlers to the logger
+logger.addHandler(fh)
+logger.addHandler(ch)
+
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
 GPIO.setup(LED_POWER_SWITCH, GPIO.OUT)
 
+def HTMLColorToRGB(colorstring):
+    # convert #RRGGBB to Color(b,g,r) object
+    colorstring = colorstring.strip()
+    if colorstring[0] == '#': colorstring = colorstring[1:]
+    if len(colorstring) != 6:
+        raise ValueError, "input #%s is not in #RRGGBB format" % colorstring
+    r, g, b = colorstring[:2], colorstring[2:4], colorstring[4:]
+    r, g, b = [int(n, 16) for n in (r, g, b)]
+    return Color(b, g, r)
 
 def colorWipe(strip, color, wait_ms=50):
     """Wipe color across display a pixel at a time."""
@@ -81,21 +108,20 @@ def theaterChaseRainbow(strip, wait_ms=50):
 strip = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL)
 strip.begin()
 
+# meh, works BGR instead of RGB, don't know why
 colors = {
 "red" : Color(0, 255, 0),
 "blue" : Color(255, 0, 0),
 "green" : Color(0, 0, 255),
-"DaronGreen" : Color(15,216,024),
-"DaronGreenLight" : Color(37,248,46),
-"MayaBlue" : Color(26,195,243),
+"DaronGreen" : Color(24,216,15),
+"DaronGreenLight" : Color(46,248,37),
+"MayaBlue" : Color(243,195,26),
 "MayaBlueLight" : Color(88,250,251),
-"Night Blue" : (0,0,180),
-"Lime" : Color(172,255,106),
-"Moonlight" : Color(201,199,136),
-"White theater" : Color(127, 127, 127),
-"white" : "white",
-"rainbow" : "rainbow",
-"rainbowCykle" : "rainbowCycle"
+"MayaBlueLight" : Color(251,250,88),
+"Night Blue" : (180,0,0),
+"Lime" : Color(106,255,172),
+"Moonlight" : Color(136,199,201),
+"WhiteTheater" : Color(127, 127, 127)
 }
 
 powerStatus = 'off'
@@ -103,18 +129,27 @@ settedColor = 'unknown'
 
 class ChangeColor(Resource):
     def get(self, color):
+        logger.info('Changing color to %s', color)
         if color in colors.keys():
             colorWipe(strip, colors[color])
-            settedColor = color;
+            global settedColor = color;
             return {'OK, Setting color:' : color}
         elif color == "rainbow":
             rainbow(strip)
-            settedColor = color
+            global settedColor = color
         elif color == "rainbowCycle":
             rainbowCycle(strip)
-            settedColor = color
+            global settedColor = color
         else:
             return {'dont known color: ' : color}
+
+class HtmlColor(Resource):
+    def get(self, color):
+        logger.info('Changing color to %s', color)
+        colorWipe(strip, HTMLColorToRGB(color))
+        global settedColor = color
+        return {'OK, Setting color: ' : color}
+
 
 # brightness todo
 class Brightness(Resource):
@@ -123,14 +158,16 @@ class Brightness(Resource):
 
 class SwitchOn(Resource):
     def get(self):
+        logger.info('Switchin on')
         GPIO.output(LED_POWER_SWITCH, GPIO.HIGH)
-        powerStatus = 'on'
+        global powerStatus = 'on'
         return {'switch':"on"}
 
 class SwitchOff(Resource):
     def get(self):
+        logger.info('Switchin off')
         GPIO.output(LED_POWER_SWITCH, GPIO.LOW)
-        powerStatus = 'off'
+        global powerStatus = 'off'
         return {'switch':"off"}
 
 class Status(Resource):
