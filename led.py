@@ -21,7 +21,7 @@ LED_CHANNEL    = 0       # set to '1' for GPIOs 13, 19, 41, 45 or 53
 logger = logging.getLogger('led_api')
 logger.setLevel(logging.DEBUG)
 # create file handler which logs even debug messages
-fh = logging.FileHandler('led_api.log')
+fh = logging.FileHandler('log.log')
 fh.setLevel(logging.DEBUG)
 # create console handler with a higher log level
 ch = logging.StreamHandler()
@@ -43,7 +43,7 @@ def HTMLColorToRGB(colorstring):
     colorstring = colorstring.strip()
     if colorstring[0] == '#': colorstring = colorstring[1:]
     if len(colorstring) != 6:
-        raise ValueError, "input #%s is not in #RRGGBB format" % colorstring
+        logger.error('Given invalid color html code, given code: %s', colorstring)
     r, g, b = colorstring[:2], colorstring[2:4], colorstring[4:]
     r, g, b = [int(n, 16) for n in (r, g, b)]
     return Color(b, g, r)
@@ -129,25 +129,27 @@ settedColor = 'unknown'
 
 class ChangeColor(Resource):
     def get(self, color):
+        global settedColor
         logger.info('Changing color to %s', color)
         if color in colors.keys():
             colorWipe(strip, colors[color])
-            global settedColor = color;
+            settedColor = color
             return {'OK, Setting color:' : color}
         elif color == "rainbow":
             rainbow(strip)
-            global settedColor = color
+            settedColor = color
         elif color == "rainbowCycle":
             rainbowCycle(strip)
-            global settedColor = color
+            settedColor = color
         else:
             return {'dont known color: ' : color}
 
 class HtmlColor(Resource):
     def get(self, color):
+        global settedColor
         logger.info('Changing color to %s', color)
         colorWipe(strip, HTMLColorToRGB(color))
-        global settedColor = color
+        settedColor = color
         return {'OK, Setting color: ' : color}
 
 
@@ -158,18 +160,22 @@ class Brightness(Resource):
 
 class SwitchOn(Resource):
     def get(self):
+        global powerStatus
         logger.info('Switchin on')
         GPIO.output(LED_POWER_SWITCH, GPIO.HIGH)
-        global powerStatus = 'on'
+        powerStatus = 'on'
         return {'switch':"on"}
 
 class SwitchOff(Resource):
     def get(self):
+        global powerStatus
         logger.info('Switchin off')
         GPIO.output(LED_POWER_SWITCH, GPIO.LOW)
-        global powerStatus = 'off'
+        powerStatus = 'off'
         return {'switch':"off"}
 
 class Status(Resource):
     def get(self):
+        global settedColor
+        global powerStatus
         return {'Led power':powerStatus, 'color':settedColor}
