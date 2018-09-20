@@ -3,7 +3,6 @@ from flask.views import MethodView
 import json
 import time
 from neopixel import *
-import argparse
 import RPi.GPIO as GPIO
 import logging
 
@@ -39,14 +38,14 @@ GPIO.setwarnings(False)
 GPIO.setup(LED_POWER_SWITCH, GPIO.OUT)
 
 def HTMLColorToRGB(colorstring):
-    # convert #RRGGBB to Color(b,g,r) object
+    # convert #RRGGBB to Color(b,r,g) object
     colorstring = colorstring.strip()
     if colorstring[0] == '#': colorstring = colorstring[1:]
     if len(colorstring) != 6:
         logger.error('Given invalid color html code, given code: %s', colorstring)
     r, g, b = colorstring[:2], colorstring[2:4], colorstring[4:]
     r, g, b = [int(n, 16) for n in (r, g, b)]
-    return Color(b, g, r)
+    return Color(b, r, g)
 
 def colorWipe(strip, color, wait_ms=50):
     """Wipe color across display a pixel at a time."""
@@ -108,17 +107,16 @@ def theaterChaseRainbow(strip, wait_ms=50):
 strip = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL)
 strip.begin()
 
-# meh, works BGR instead of RGB, don't know why
+# meh, works BRG instead of RGB, don't know why
 colors = {
 "red" : Color(0, 255, 0),
 "blue" : Color(255, 0, 0),
 "green" : Color(0, 0, 255),
-"DaronGreen" : Color(24,216,15),
-"DaronGreenLight" : Color(46,248,37),
-"MayaBlue" : Color(243,195,26),
-"MayaBlueLight" : Color(88,250,251),
-"MayaBlueLight" : Color(251,250,88),
-"Night Blue" : (180,0,0),
+"DaronGreen" : Color(15,24,216),
+"DaronGreenLight" : Color(37,46,248),
+"MayaBlue" : Color(243,26,195),
+"MayaBlueLight" : Color(251,88,250),
+"NightBlue" : (180,0,0),
 "Lime" : Color(106,255,172),
 "Moonlight" : Color(136,199,201),
 "WhiteTheater" : Color(127, 127, 127)
