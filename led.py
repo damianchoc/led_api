@@ -122,7 +122,7 @@ colors = {
 "WhiteTheater" : Color(127, 127, 127)
 }
 
-powerStatus = 'off'
+powerStatus = 0
 settedColor = 'unknown'
 
 class ChangeColor(Resource):
@@ -161,7 +161,7 @@ class SwitchOn(Resource):
         global powerStatus
         logger.info('Switchin on')
         GPIO.output(LED_POWER_SWITCH, GPIO.HIGH)
-        powerStatus = 'on'
+        powerStatus = 1
         return {'switch':"on"}
 
 class SwitchOff(Resource):
@@ -169,7 +169,7 @@ class SwitchOff(Resource):
         global powerStatus
         logger.info('Switchin off')
         GPIO.output(LED_POWER_SWITCH, GPIO.LOW)
-        powerStatus = 'off'
+        powerStatus = 0
         return {'switch':"off"}
 
 class Status(Resource):
