@@ -176,4 +176,6 @@ class Status(Resource):
     def get(self):
         global settedColor
         global powerStatus
-        return {'Led power':powerStatus, 'color':settedColor}
+        #homebridge expects only 0 or 1 value for status
+        return powerStatus
+        #return {'Led power':powerStatus, 'color':settedColor}
