@@ -7,7 +7,7 @@ App runs api that let you controll your let strip via http requests:
 (your IP):4040/switchOn - switch on led strip by relay<br/>
 (your IP):4040/switchOff - switch off led strip by relay<br/>
 (your IP):4040/status - gives status if led is turned on or off. Gives '1' or '0'<br/>
-(your IP):4040/htmlColor/(string color) - expect html code color '#XXXXXX'<br/>
+(your IP):4040/htmlColor/(string color) - expect html code color '#XXXXXX' or 'XXXXXX'<br/>
 
 <h2>Config:</h2>
 
