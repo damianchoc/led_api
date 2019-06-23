@@ -37,9 +37,6 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
 GPIO.setup(LED_POWER_SWITCH, GPIO.OUT)
 
-powerStatus = 0
-settedColor = 'unknown'
-
 def HTMLColorToRGB(colorstring):
     # convert #RRGGBB to Color(b,r,g) object
     colorstring = colorstring.strip()
@@ -124,6 +121,9 @@ colors = {
 "Moonlight" : Color(136,199,201),
 "WhiteTheater" : Color(127, 127, 127)
 }
+
+powerStatus = 0
+settedColor = 'unknown'
 
 class ChangeColor(Resource):
     def get(self, color):
