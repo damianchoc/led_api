@@ -10,6 +10,7 @@ api.add_resource(led.Brightness, "/brightness/<int:percent>")
 api.add_resource(led.SwitchOn, "/switchOn")
 api.add_resource(led.SwitchOff, "/switchOff")
 api.add_resource(led.Status, "/status")
+api.add_resource(led.getColor, "/getColor")
 api.add_resource(led.HtmlColor, "/htmlColor/<string:color>")
 
 if __name__ == "__main__":

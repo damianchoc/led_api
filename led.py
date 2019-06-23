@@ -19,8 +19,8 @@ LED_CHANNEL    = 0       # set to '1' for GPIOs 13, 19, 41, 45 or 53
 # LOG CONFIG
 logger = logging.getLogger('led_api')
 logger.setLevel(logging.DEBUG)
-# create file handler which logs even debug messages
-fh = logging.FileHandler('log.log')
+# specify where you want log file
+fh = logging.FileHandler('/var/log/led_api.log')
 fh.setLevel(logging.DEBUG)
 # create console handler with a higher log level
 ch = logging.StreamHandler()
@@ -36,6 +36,9 @@ logger.addHandler(ch)
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
 GPIO.setup(LED_POWER_SWITCH, GPIO.OUT)
+
+powerStatus = 0
+settedColor = 'unknown'
 
 def HTMLColorToRGB(colorstring):
     # convert #RRGGBB to Color(b,r,g) object
@@ -122,9 +125,6 @@ colors = {
 "WhiteTheater" : Color(127, 127, 127)
 }
 
-powerStatus = 0
-settedColor = 'unknown'
-
 class ChangeColor(Resource):
     def get(self, color):
         global settedColor
@@ -174,8 +174,10 @@ class SwitchOff(Resource):
 
 class Status(Resource):
     def get(self):
-        global settedColor
         global powerStatus
-        #homebridge expects only 0 or 1 value for status
         return powerStatus
-        #return {'Led power':powerStatus, 'color':settedColor}
+
+class getColor(Resource):
+    def get(self):
+        global settedColor
+        return settedColor
