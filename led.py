@@ -163,9 +163,9 @@ class SwitchOn(Resource):
         GPIO.output(LED_POWER_SWITCH, GPIO.HIGH)
         powerStatus = 1
         if settedColor != 'unknown':
-            logger.info('Seems that color is set up. Setting')
+            logger.info('Seems color is set up. Setting')
             try:
-                colorWipe(strip, HTMLColorToRGB(color))
+                colorWipe(strip, HTMLColorToRGB(settedColor))
                 logger.info('Preious color set succesfully')
             except Exception as e:
                 logger.error('Error witch setting previous color')
