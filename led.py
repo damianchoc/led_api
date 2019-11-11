@@ -130,7 +130,7 @@ class change_color(Resource):
         global settedColor
         logger.info('Changing color to %s', color)
         if color in colors.keys():
-            colorWipe(strip, colors[color])
+            color_wipe(strip, colors[color])
             settedColor = color
             return {'OK, Setting color:' : color}
         elif color == "rainbow":
@@ -146,7 +146,7 @@ class html_color(Resource):
     def get(self, color):
         global settedColor
         logger.info('Changing color to %s', color)
-        colorWipe(strip, HTMLColorToRGB(color))
+        color_wipe(strip, html_color_to_rgb(color))
         settedColor = color
         return {'OK, Setting color: ' : color}
 
@@ -165,7 +165,7 @@ class switch_on(Resource):
         if settedColor != 'unknown':
             logger.info('Seems color is set up. Setting')
             try:
-                colorWipe(strip, HTMLColorToRGB(settedColor))
+                color_wipe(strip, html_color_to_rgb(settedColor))
                 logger.info('Preious color set succesfully')
             except Exception as e:
                 logger.error('Error witch setting previous color')
