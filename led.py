@@ -125,7 +125,7 @@ colors = {
 powerStatus = 0
 settedColor = 'unknown'
 
-class ChangeColor(Resource):
+class change_color(Resource):
     def get(self, color):
         global settedColor
         logger.info('Changing color to %s', color)
@@ -142,7 +142,7 @@ class ChangeColor(Resource):
         else:
             return {'dont known color: ' : color}
 
-class HtmlColor(Resource):
+class html_color(Resource):
     def get(self, color):
         global settedColor
         logger.info('Changing color to %s', color)
@@ -152,11 +152,11 @@ class HtmlColor(Resource):
 
 
 # brightness todo
-class Brightness(Resource):
+class brightness(Resource):
     def get(self, percent):
         return {'some':'bright'}
 
-class SwitchOn(Resource):
+class switch_on(Resource):
     def get(self):
         global powerStatus
         logger.info('Switchin on')
@@ -171,7 +171,7 @@ class SwitchOn(Resource):
                 logger.error('Error witch setting previous color')
         return {'switch':"on"}
 
-class SwitchOff(Resource):
+class switch_off(Resource):
     def get(self):
         global powerStatus
         logger.info('Switchin off')
@@ -179,12 +179,12 @@ class SwitchOff(Resource):
         powerStatus = 0
         return {'switch':"off"}
 
-class Status(Resource):
+class status(Resource):
     def get(self):
         global powerStatus
         return powerStatus
 
-class getColor(Resource):
+class get_color(Resource):
     def get(self):
         global settedColor
         return settedColor
