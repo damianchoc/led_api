@@ -37,7 +37,7 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
 GPIO.setup(LED_POWER_SWITCH, GPIO.OUT)
 
-def HTMLColorToRGB(colorstring):
+def html_color_to_rgb(colorstring):
     # convert #RRGGBB to Color(b,r,g) object
     colorstring = colorstring.strip()
     if colorstring[0] == '#': colorstring = colorstring[1:]
@@ -47,14 +47,14 @@ def HTMLColorToRGB(colorstring):
     r, g, b = [int(n, 16) for n in (r, g, b)]
     return Color(b, r, g)
 
-def colorWipe(strip, color, wait_ms=50):
+def color_wipe(strip, color, wait_ms=50):
     """Wipe color across display a pixel at a time."""
     for i in range(strip.numPixels()):
         strip.setPixelColor(i, color)
         strip.show()
         time.sleep(wait_ms/1000.0)
 
-def theaterChase(strip, color, wait_ms=50, iterations=10):
+def theater_chase(strip, color, wait_ms=50, iterations=10):
     """Movie theater light style chaser animation."""
     for j in range(iterations):
         for q in range(3):
@@ -84,7 +84,7 @@ def rainbow(strip, wait_ms=20, iterations=1):
         strip.show()
         time.sleep(wait_ms/1000.0)
 
-def rainbowCycle(strip, wait_ms=20, iterations=5):
+def rainbow_cycle(strip, wait_ms=20, iterations=5):
     """Draw rainbow that uniformly distributes itself across all pixels."""
     for j in range(256*iterations):
         for i in range(strip.numPixels()):
@@ -92,7 +92,7 @@ def rainbowCycle(strip, wait_ms=20, iterations=5):
         strip.show()
         time.sleep(wait_ms/1000.0)
 
-def theaterChaseRainbow(strip, wait_ms=50):
+def theater_chaseRainbow(strip, wait_ms=50):
     """Rainbow movie theater light style chaser animation."""
     for j in range(256):
         for q in range(3):
